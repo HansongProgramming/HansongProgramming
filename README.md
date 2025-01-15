@@ -3,7 +3,11 @@
 <h1 align="left">HELLO WORLD!</h1>
 
 # 💫 About Me:
-Currently working on AiCore, a system aimed to automate forensics-bloodstain pattern analysis<br><br>Fun Fact: My dreams reveal answers to bugs in codes i wrote
+Soon to be a degree holder - Bachelor of Science in Information Technology Majoring in Web-Technologies.
+Finishing Capstone 1-2 and is looking for internship.
+
+
+Currently working on AiCore, a software aimed to automate forensics-bloodstain pattern analysis<br><br>Fun Fact: My dreams reveal bug fixes.
 
 ###
 
