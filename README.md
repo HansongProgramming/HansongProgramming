@@ -16,7 +16,7 @@ Currently working on AiCore, a software aimed to automate forensics-bloodstain p
 
 <div align="left">
   <img src="https://github-readme-stats.vercel.app/api?username=HansongProgramming&hide_title=false&hide_rank=false&show_icons=true&include_all_commits=true&count_private=true&disable_animations=false&theme=dracula&locale=en&hide_border=false" height="150" alt="stats graph"  />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs?username=HansongProgramming&locale=en&hide_title=false&layout=compact&card_width=320&langs_count=6&hide_border=false&custom_title=%F0%9F%93%8A%20GitHub%20Stats:" height="150" alt="languages graph"  />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs?username=HansongProgramming&locale=en&hide_title=false&layout=compact&card_width=320&theme=dracula&langs_count=6&hide_border=false&custom_title=%F0%9F%93%8A%20GitHub%20Stats:" height="150" alt="languages graph"  />
 </div>
 
 ###
@@ -124,10 +124,10 @@ Currently working on AiCore, a software aimed to automate forensics-bloodstain p
 ###
 
 ## 🏆 GitHub Trophies
-![](https://github-profile-trophy.vercel.app/?username=HansongProgramming&theme=monokai&no-frame=true&no-bg=true&margin-w=4)
+![](https://github-profile-trophy.vercel.app/?username=HansongProgramming&theme=dracula&no-frame=true&no-bg=true&margin-w=4)
 
 ### 🔝 Top Contributed Repo
-![](https://github-contributor-stats.vercel.app/api?username=HansongProgramming&limit=5&theme=monokai&combine_all_yearly_contributions=true)
+![](https://github-contributor-stats.vercel.app/api?username=HansongProgramming&limit=5&theme=dracula&combine_all_yearly_contributions=true)
 
 ---
 [![](https://visitcount.itsvg.in/api?id=HansongProgramming&icon=1&color=3)](https://visitcount.itsvg.in)
