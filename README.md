@@ -1,4 +1,5 @@
 <img src = "https://github.com/HansongProgramming/HansongProgramming/blob/main/banner.png">
+<img src="https://raw.githubusercontent.com/HansongProgramming/HansongProgramming/output/snake.svg" alt="Snake animation" />
 
 # 💫 About Me:
 Soon to be a degree holder - Bachelor of Science in Information Technology Majoring in Web-Technologies.
@@ -124,14 +125,6 @@ Currently working on AiCore, a software aimed to automate forensics-bloodstain p
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/embeddedc/embeddedc-original.svg" height="30" alt="embeddedc logo"  />
 </div>
 
-###
-
-<br clear="both">
-
-<img src="https://raw.githubusercontent.com/HansongProgramming/HansongProgramming/output/snake.svg" alt="Snake animation" />
-
-###
-###
 
 ## 🏆 GitHub Trophies
 ![](https://github-profile-trophy.vercel.app/?username=HansongProgramming&theme=dracula&no-frame=true&no-bg=true&margin-w=4)
