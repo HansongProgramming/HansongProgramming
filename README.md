@@ -15,6 +15,7 @@ Currently working on AiCore, a software aimed to automate forensics-bloodstain p
 <h2 align="left">📊 GitHub Stats:</h2>
 <!-- LOC Badge -->
 ![Lines of Code](https://img.shields.io/badge/Lines_of_Code-166-blue)
+
 ###
 
 <div align="left">
