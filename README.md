@@ -45,6 +45,8 @@ Currently working on AiCore, a software aimed to automate forensics-bloodstain p
   </a>
 </div>
 
+<!-- LOC Badge -->
+
 ###
 
 <h2 align="left">💻 Tech Stack:</h2>
