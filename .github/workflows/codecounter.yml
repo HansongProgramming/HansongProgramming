@@ -22,12 +22,12 @@ jobs:
         run: |
           sed -i '/<!-- LOC Badge -->/r LOC.md' README.md
 
-      - name: Pull latest changes  # This step was previously outside the job
+      - name: Pull latest changes 
         run: |
           git fetch origin
           git reset --hard origin/main  # Resets to the latest remote state
 
-      - name: Commit and Push Changes  # This step was previously outside the job
+      - name: Commit and Push Changes  
         run: |
           git add .
           git commit -m "Update lines of code count" || echo "No changes to commit"
