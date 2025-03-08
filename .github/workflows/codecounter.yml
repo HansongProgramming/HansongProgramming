@@ -22,6 +22,13 @@ jobs:
         run: |
           sed -i '/<!-- LOC Badge -->/r LOC.md' README.md
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Update lines of code count"
+      - name: Pull latest changes  # This step was previously outside the job
+        run: |
+          git fetch origin
+          git reset --hard origin/main  # Resets to the latest remote state
+
+      - name: Commit and Push Changes  # This step was previously outside the job
+        run: |
+          git add .
+          git commit -m "Update lines of code count" || echo "No changes to commit"
+          git push origin main
