@@ -6,7 +6,10 @@ Soon to be a degree holder - Bachelor of Science in Information Technology Major
 Finishing Capstone 1-2 and is looking for internship.
 
 
-Currently working on AiCore, a software aimed to automate forensics-bloodstain pattern analysis<br><br>Fun Fact: My dreams reveal bug fixes.
+Currently working on `AiCore` , a software aimed to automate forensics-bloodstain pattern analysis. 
+Currently working on `(5) Personal Projects` (Secret for now).
+
+<br><br>Fun Fact: My dreams reveal bug fixes.
 
 <h1 align="left">HELLO WORLD!</h1>
 
