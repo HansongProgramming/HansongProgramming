@@ -3,10 +3,11 @@
 
 # 💫 About Me:
 Soon to be a degree holder - Bachelor of Science in Information Technology Majoring in Web-Technologies.
-Finishing Capstone 1-2 and is looking for internship.
+Finishing Capstone 2. Intern at Innovation and Technology Transfer Office (2025)
 
 
 Currently working on `AiCore` , a software aimed to automate forensics-bloodstain pattern analysis. 
+Currently working on `UColab`, a skill based matchmaking platform for hackathons.
 Currently working on `(5) Personal Projects` (Secret for now).
 
 <br><br>Fun Fact: My dreams reveal bug fixes.
