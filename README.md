@@ -2,13 +2,16 @@
 <img src="https://raw.githubusercontent.com/HansongProgramming/HansongProgramming/output/snake.svg" alt="Snake animation" />
 
 # 💫 About Me:
-Soon to be a degree holder - Bachelor of Science in Information Technology Majoring in Web-Technologies.
-Finishing Capstone 2. Intern at Innovation and Technology Transfer Office (2025)
+Bachelor of Science in Information Technology (Cum Laude 2025)
+Masters | Computer Science (Ongoing)
 
 
-Currently working on `AiCore` , a software aimed to automate forensics-bloodstain pattern analysis. 
-Currently working on `UColab`, a skill based matchmaking platform for hackathons.
-Currently working on `(5) Personal Projects` (Secret for now).
+
+Instructor at the University of the Cordilleras 
+Lead Developer for `AiCore` , a software aimed to automate forensics-bloodstain pattern analysis. 
+Front-end Developer for `UColab`, a skill based matchmaking platform for hackathons.
+Lead Developer for `Kwento Kard`, an AR Business Card SaaS.
+Lead Developer for `Kita Kordillera` a digital triage for eye checkups.
 
 <br><br>Fun Fact: My dreams reveal bug fixes.
 
