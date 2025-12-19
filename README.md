@@ -67,13 +67,3 @@ Most of my work lives where **research**, **engineering**, and **real-world depl
   <a href="https://www.facebook.com/hansunleee/"><img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white" /></a>
   <a href="https://www.linkedin.com/in/hans-harold-lee-flores-90b210345"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" /></a>
 </p>
-
----
-
-<p align="center">
-  <img src="https://github-contributor-stats.vercel.app/api?username=HansongProgramming&limit=5&theme=monokai&combine_all_yearly_contributions=true" />
-</p>
-
-<p align="center">
-  <img src="https://visitcount.itsvg.in/api?id=HansongProgramming&icon=1&color=3" />
-</p>
