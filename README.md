@@ -18,7 +18,7 @@
 🎓 **BS Information Technology (Cum Laude, 2025)**  
 🎓 **MS Computer Science (Ongoing)**  
 
-👨‍🏫 **Instructor** — University of the Cordilleras  
+**Lead Automation Developer** - Systemize Solutions
 
 I design and build **end-to-end systems** across AI, AR, automation, and full-stack platforms.  
 Most of my work lives where **research**, **engineering**, and **real-world deployment** collide.
