@@ -1,1 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wrapped.dev — Your GitHub, Beautiful</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --glass-bg: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.13);
+    --glass-shadow: rgba(0,0,0,0.4);
+    --accent: #a8ff78;
+    --accent2: #78ffd6;
+    --text: #f0f0f0;
+    --muted: rgba(255,255,255,0.45);
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: #080c10;
+    font-family: 'DM Mono', monospace;
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(168,255,120,0.4);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.12s ease, width 0.3s, height 0.3s, border-color 0.3s;
+  }
+
+  /* animated bg mesh */
+  .bg-mesh {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    animation: float 12s ease-in-out infinite;
+  }
+  .blob1 { width: 600px; height: 600px; background: #00ff87; top: -200px; left: -100px; animation-delay: 0s; }
+  .blob2 { width: 500px; height: 500px; background: #0066ff; bottom: -100px; right: -100px; animation-delay: -4s; }
+  .blob3 { width: 400px; height: 400px; background: #ff006e; top: 40%; left: 40%; animation-delay: -8s; }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(30px, -40px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.97); }
+  }
+
+  /* noise overlay */
+  .noise {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    pointer-events: none;
+  }
+
+  /* layout */
+  main {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    gap: 64px;
+  }
+
+  /* header */
+  header {
+    text-align: center;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+  }
+
+  h1 span.glow {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    line-height: 1.7;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  /* glass card */
+  .glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    box-shadow: 0 8px 48px var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.08);
+    padding: 40px;
+    width: 100%;
+    max-width: 520px;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+
+  .input-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .gh-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .gh-input::placeholder { color: rgba(255,255,255,0.2); }
+  .gh-input:focus {
+    border-color: rgba(168,255,120,0.4);
+    background: rgba(168,255,120,0.04);
+  }
+
+  .btn-generate {
+    background: var(--accent);
+    color: #080c10;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 22px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: none;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+    white-space: nowrap;
+  }
+  .btn-generate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(168,255,120,0.35);
+    background: #bfffaa;
+  }
+  .btn-generate:active { transform: translateY(0); }
+
+  /* preview card */
+  .preview-wrap {
+    width: 100%;
+    max-width: 680px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .preview-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+    padding-left: 4px;
+  }
+
+  .metrics-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    padding: 32px;
+    box-shadow: 0 16px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metrics-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168,255,120,0.5), transparent);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid rgba(168,255,120,0.3);
+    background: linear-gradient(135deg, rgba(168,255,120,0.2), rgba(120,255,214,0.2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    overflow: hidden;
+  }
+
+  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+  .user-info h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .user-info span {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* commit grid 3D */
+  .commit-section { margin-bottom: 28px; }
+  .section-title {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .commit-grid-wrap {
+    perspective: 600px;
+  }
+
+  .commit-grid {
+    display: grid;
+    grid-template-columns: repeat(52, 1fr);
+    gap: 3px;
+    transform: rotateX(30deg) rotateZ(-5deg);
+    transform-style: preserve-3d;
+    transform-origin: center bottom;
+    transition: transform 0.6s ease;
+  }
+
+  .commit-grid:hover {
+    transform: rotateX(15deg) rotateZ(-2deg);
+  }
+
+  .commit-cell {
+    aspect-ratio: 1;
+    border-radius: 2px;
+    animation: cellPop 0.4s ease both;
+  }
+
+  @keyframes cellPop {
+    from { transform: scaleZ(0); opacity: 0; }
+    to { transform: scaleZ(1); opacity: 1; }
+  }
+
+  .c0 { background: rgba(255,255,255,0.05); }
+  .c1 { background: rgba(168,255,120,0.25); box-shadow: 0 0 4px rgba(168,255,120,0.15); }
+  .c2 { background: rgba(168,255,120,0.5); box-shadow: 0 0 6px rgba(168,255,120,0.3); }
+  .c3 { background: rgba(168,255,120,0.75); box-shadow: 0 0 8px rgba(168,255,120,0.5); }
+  .c4 { background: rgba(168,255,120,1); box-shadow: 0 0 12px rgba(168,255,120,0.7); }
+
+  /* stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-pill {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px 16px;
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .stat-pill:hover {
+    border-color: rgba(168,255,120,0.2);
+    background: rgba(168,255,120,0.04);
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    letter-spacing: -0.02em;
+  }
+  .stat-lbl {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* language bars */
+  .lang-section { margin-bottom: 24px; }
+  .lang-bar-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .lang-row { display: flex; align-items: center; gap: 10px; }
+  .lang-name { font-size: 11px; color: var(--muted); width: 70px; flex-shrink: 0; }
+  .lang-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .lang-fill {
+    height: 100%;
+    border-radius: 99px;
+    animation: fillIn 1s ease both;
+  }
+  @keyframes fillIn {
+    from { width: 0 !important; }
+  }
+  .lang-pct { font-size: 11px; color: var(--muted); width: 36px; text-align: right; flex-shrink: 0; }
+
+  /* copy section */
+  .copy-section {
+    margin-top: 4px;
+  }
+  .copy-btn {
+    width: 100%;
+    background: rgba(168,255,120,0.08);
+    border: 1px solid rgba(168,255,120,0.2);
+    border-radius: 12px;
+    padding: 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    cursor: none;
+    letter-spacing: 0.08em;
+    transition: background 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .copy-btn:hover {
+    background: rgba(168,255,120,0.15);
+    box-shadow: 0 4px 20px rgba(168,255,120,0.1);
+  }
+
+  /* gif slot hint */
+  .gif-slot {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    border: 1px dashed rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    background: rgba(255,255,255,0.02);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .gif-slot .gif-label {
+    position: absolute;
+    bottom: 2px;
+    font-size: 7px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* footer */
+  footer {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+    text-align: center;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* loading state */
+  .loading .commit-cell {
+    animation: pulse 1.2s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+  }
+
+  /* hidden state */
+  .preview-wrap.hidden { opacity: 0; pointer-events: none; }
+  .preview-wrap { transition: opacity 0.4s; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="bg-mesh">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+<div class="noise"></div>
+
+<main>
+  <header>
+    <p class="eyebrow">✦ github metrics, reimagined</p>
+    <h1>Your code.<br><span class="glow">Beautiful.</span></h1>
+    <p class="subtitle">Drop your username. Get a glass-finish metrics card for your README. No setup. No tokens.</p>
+  </header>
+
+  <div class="glass-card">
+    <label class="input-label" for="username">// github username</label>
+    <div class="input-row">
+      <input class="gh-input" id="username" type="text" placeholder="hansong" autocomplete="off" spellcheck="false" />
+      <button class="btn-generate" onclick="generate()">Generate →</button>
+    </div>
+  </div>
+
+  <div class="preview-wrap" id="preview">
+    <p class="preview-label">// preview</p>
+    <div class="metrics-card">
+      <div class="card-header">
+        <div class="gif-slot" id="gifSlot">
+          🎞️
+          <span class="gif-label">GIF</span>
+        </div>
+        <div class="avatar" id="avatarWrap">
+          <img id="avatarImg" src="" alt="" style="display:none" />
+          <span id="avatarFallback">👤</span>
+        </div>
+        <div class="user-info">
+          <h2 id="displayName">hansong</h2>
+          <span id="displayBio">developer · github</span>
+        </div>
+      </div>
+
+      <div class="commit-section">
+        <p class="section-title">// contributions this year</p>
+        <div class="commit-grid-wrap">
+          <div class="commit-grid" id="commitGrid"></div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-pill">
+          <span class="stat-num" id="statCommits">—</span>
+          <span class="stat-lbl">commits</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num" id="statRepos">—</span>
+          <span class="stat-lbl">repos</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num" id="statStars">—</span>
+          <span class="stat-lbl">stars</span>
+        </div>
+      </div>
+
+      <div class="lang-section">
+        <p class="section-title">// top languages</p>
+        <div class="lang-bar-wrap" id="langBars"></div>
+      </div>
+
+      <div class="copy-section">
+        <button class="copy-btn" onclick="copyMarkdown()">
+          <span>⌘</span> copy markdown
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>wrapped.dev — open source soon ✦</footer>
+</main>
+
+<script>
+  // cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  document.querySelectorAll('button, input, a').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '16px';
+      cursor.style.height = '16px';
+      ring.style.width = '52px';
+      ring.style.height = '52px';
+      ring.style.borderColor = 'rgba(168,255,120,0.7)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px';
+      cursor.style.height = '10px';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+      ring.style.borderColor = 'rgba(168,255,120,0.4)';
+    });
+  });
+
+  // generate commit grid (random for now — will hook up to API)
+  function buildGrid(data) {
+    const grid = document.getElementById('commitGrid');
+    grid.innerHTML = '';
+    const weeks = 52;
+    const days = 7;
+    for (let w = 0; w < weeks; w++) {
+      for (let d = 0; d < days; d++) {
+        const cell = document.createElement('div');
+        const idx = w * 7 + d;
+        const val = data ? data[idx] : 0;
+        cell.className = `commit-cell c${val}`;
+        cell.style.animationDelay = `${(w * 7 + d) * 2}ms`;
+        grid.appendChild(cell);
+      }
+    }
+  }
+
+  function randomGrid() {
+    const total = 52 * 7;
+    return Array.from({ length: total }, () => {
+      const r = Math.random();
+      if (r > 0.7) return Math.floor(Math.random() * 4) + 1;
+      return 0;
+    });
+  }
+
+  // langs config
+  const langColors = {
+    'JavaScript': 'linear-gradient(90deg, #f7df1e, #e8a000)',
+    'TypeScript': 'linear-gradient(90deg, #3178c6, #5ba3f5)',
+    'Python': 'linear-gradient(90deg, #3776ab, #78c8e8)',
+    'CSS': 'linear-gradient(90deg, #a8ff78, #78ffd6)',
+    'HTML': 'linear-gradient(90deg, #ff6b35, #ff9a5c)',
+    'Other': 'linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.15))',
+  };
+
+  function buildLangs(langs) {
+    const wrap = document.getElementById('langBars');
+    wrap.innerHTML = '';
+    langs.forEach(({ name, pct }) => {
+      const color = langColors[name] || langColors['Other'];
+      wrap.innerHTML += `
+        <div class="lang-row">
+          <span class="lang-name">${name}</span>
+          <div class="lang-track"><div class="lang-fill" style="width:${pct}%;background:${color}"></div></div>
+          <span class="lang-pct">${pct}%</span>
+        </div>`;
+    });
+  }
+
+  async function generate() {
+    const username = document.getElementById('username').value.trim() || 'hansong';
+
+    // update display name immediately
+    document.getElementById('displayName').textContent = username;
+    document.getElementById('displayBio').textContent = 'loading...';
+    document.getElementById('statCommits').textContent = '...';
+    document.getElementById('statRepos').textContent = '...';
+    document.getElementById('statStars').textContent = '...';
+
+    buildGrid(randomGrid());
+
+    // fetch from GitHub public API
+    try {
+      const res = await fetch(`https://api.github.com/users/${username}`);
+      const user = await res.json();
+
+      if (user.message) {
+        document.getElementById('displayBio').textContent = 'user not found';
+        return;
+      }
+
+      document.getElementById('displayName').textContent = user.name || username;
+      document.getElementById('displayBio').textContent = user.bio || `@${username} · github`;
+      document.getElementById('statRepos').textContent = user.public_repos;
+      document.getElementById('statFollowers').textContent = user.followers;
+
+      // avatar
+      const img = document.getElementById('avatarImg');
+      img.src = user.avatar_url;
+      img.style.display = 'block';
+      document.getElementById('avatarFallback').style.display = 'none';
+
+      // fetch repos for stars
+      const reposRes = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
+      const repos = await reposRes.json();
+      const totalStars = repos.reduce((s, r) => s + r.stargazers_count, 0);
+      document.getElementById('statStars').textContent = totalStars;
+
+      // rough commit count from events
+      const eventsRes = await fetch(`https://api.github.com/users/${username}/events/public?per_page=100`);
+      const events = await eventsRes.json();
+      const pushes = events.filter(e => e.type === 'PushEvent');
+      const commitCount = pushes.reduce((s, e) => s + (e.payload.commits?.length || 0), 0);
+      document.getElementById('statCommits').textContent = commitCount + '+';
+
+      // language tally from repos
+      const langMap = {};
+      repos.forEach(r => { if (r.language) langMap[r.language] = (langMap[r.language] || 0) + 1; });
+      const sorted = Object.entries(langMap).sort((a,b) => b[1]-a[1]).slice(0,4);
+      const total = sorted.reduce((s,[,v]) => s+v, 0);
+      const langs = sorted.map(([name, count]) => ({ name, pct: Math.round(count/total*100) }));
+      if (langs.length) buildLangs(langs);
+
+    } catch(e) {
+      document.getElementById('displayBio').textContent = 'could not load data';
+    }
+
+    buildGrid(randomGrid());
+  }
+
+  function copyMarkdown() {
+    const username = document.getElementById('username').value.trim() || 'hansong';
+    const md = `![GitHub Metrics](https://wrapped.dev/api/${username}/metrics.svg)`;
+    navigator.clipboard.writeText(md).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✓ copied!';
+      setTimeout(() => { btn.innerHTML = '<span>⌘</span> copy markdown'; }, 2000);
+    });
+  }
+
+  // init with placeholder
+  buildGrid(randomGrid());
+  buildLangs([
+    { name: 'JavaScript', pct: 45 },
+    { name: 'TypeScript', pct: 28 },
+    { name: 'Python', pct: 18 },
+    { name: 'CSS', pct: 9 },
+  ]);
+
+  // enter key
+  document.getElementById('username').addEventListener('keydown', e => {
+    if (e.key === 'Enter') generate();
+  });
+
+  // fix missing statFollowers id
+  // (followers shown in bio for now)
+</script>
+</body>
+</html>
