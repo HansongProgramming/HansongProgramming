@@ -1,1 +1,6 @@
-![GitHub Metrics](https://wrapped.dev/api/HansongProgramming/metrics.svg)
+# my metrics
+
+![Metrics](./metrics.svg)
+
+---
+*auto-updated daily via github actions*
