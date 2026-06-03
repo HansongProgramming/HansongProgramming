@@ -15,5 +15,22 @@
             "#008800",
             "#00ff00"
         ]
+    },
+    {
+        "type": "normal",
+        "fileName": "profile-night-view.svg",
+        "backgroundColor": "#0d1117",
+        "foregroundColor": "#c9d1d9",
+        "strongColor": "#58a6ff",
+        "weakColor": "#30363d",
+        "radarColor": "#1f6feb",
+        "growingAnimation": false,
+        "contribColors": [
+            "#161b22",
+            "#0e4429",
+            "#006d32",
+            "#26a641",
+            "#39d353"
+        ]
     }
 ]
