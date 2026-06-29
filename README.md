@@ -4,7 +4,7 @@
   <img src="https://raw.githubusercontent.com/HansongProgramming/HansongProgramming/trophy-output/trophy.svg" height="150" alt="trophy graph"  />
   <img src="https://raw.githubusercontent.com/HansongProgramming/HansongProgramming/activity-graph-output/activity-graph.svg" height="300" alt="activity-graph graph"  />
   <br clear="both">
-# The STACK
+<h1>His Stack</h1>
 <div data-importer="techs" align="center">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="40" alt="javascript logo"  />
   <img width="12" />
