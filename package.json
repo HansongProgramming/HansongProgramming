@@ -1,0 +1,11 @@
+{
+  "name": "profile-card",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsx build.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}
