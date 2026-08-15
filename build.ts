@@ -5,9 +5,9 @@ import { fetchGitHub, toProfileData } from "./fetch-github.ts";
 
 // ---- edit these two lines to change the wording on the card ----
 const CARD_TEXT = {
-  intro: "Crafting 3D web, AR/VR & AI-powered tools.",
+  intro: "3D web, AR/VR & AI-powered tools.",
   title: "3D Developer",
-  tech: "Three.js · WebGL · React",
+  tech: "Three.js · WebGL · React · Blender",
 };
 // ---------------------------------------------------------------
 
