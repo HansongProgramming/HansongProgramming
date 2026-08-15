@@ -1,0 +1,35 @@
+name: Update profile card
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # every day at 06:00 UTC
+  workflow_dispatch:        # adds a "Run workflow" button for manual runs
+
+permissions:
+  contents: write           # lets the action commit the updated card.svg
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - name: Build card.svg
+        run: npx tsx build.ts
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          # GH_LOGIN falls back to the repo owner automatically
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add card.svg
+          git diff --quiet --cached || git commit -m "chore: update profile card"
+          git push
