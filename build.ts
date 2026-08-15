@@ -24,8 +24,11 @@ const { grid, data } = toProfileData(user, CARD_TEXT);
 const svg = renderProfileCard(grid, data, {
   orientation: "skyline",   // "iso" | "skyline" | "angled" | "topdown"
   animStyle: "build",       // "build" | "wave" | "sweep" | "bounce" | "drop"
-  animStagger: 0.016,
-  animDuration: 0.4,
+  animStagger: 0.007,       // gap between neighbouring bars
+  animDuration: 0.28,       // how long one bar takes to appear (and to vanish)
+  animLoop: true,           // appear -> hold -> vanish -> repeat
+  animHold: 1.1,            // seconds the finished city stays up
+  animGap: 0.45,            // empty beat before it rebuilds
 });
 
 writeFileSync("card.svg", svg);

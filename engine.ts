@@ -10,6 +10,7 @@ export interface RenderOptions {
   levelHeight?: number; minHeight?: number; gap?: number; padding?: number;
   background?: string | null; radius?: number; palette?: string[]; emptyColor?: string;
   levels?: number; animStyle?: AnimStyle; animDuration?: number; animStagger?: number;
+  animLoop?: boolean; animHold?: number; animGap?: number;
   originX?: number; originY?: number;
 }
 
@@ -25,7 +26,8 @@ const DEF = {
   background: "#0d1117" as string | null, radius: 16,
   palette: ["#0e4429", "#006d32", "#26a641", "#39d353", "#7ff59a"],
   emptyColor: "#161b22", levels: 5,
-  animStyle: "build" as AnimStyle, animDuration: 0.4, animStagger: 0.02,
+  animStyle: "build" as AnimStyle, animDuration: 0.28, animStagger: 0.007,
+  animLoop: true, animHold: 1.1, animGap: 0.45,
 };
 
 // ---- colour helpers ----
@@ -43,15 +45,73 @@ const pl = (pts: Pt[]) => pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`)
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 // ---- bar animation CSS ----
-export function styleBlock(o: { animStyle: AnimStyle; animDuration: number }): string {
+
+// Longest animation-delay handed out by renderBars, so the looping keyframes can
+// wait for the whole wave to finish building before the teardown wave starts.
+export function staggerSpan(grid: number[][], o: { animStyle: AnimStyle; animStagger: number }): number {
+  if (o.animStyle === "wave" || o.animStyle === "none") return 0;
+  const rows = grid.length, cols = Math.max(0, ...grid.map(r => r.length));
+  if (!rows || !cols) return 0;
+  const steps = o.animStyle === "build" ? rows * cols - 1 : (rows - 1) + (cols - 1);
+  return Math.max(0, steps) * o.animStagger;
+}
+
+export function styleBlock(
+  o: { animStyle: AnimStyle; animDuration: number; animLoop?: boolean; animHold?: number; animGap?: number },
+  span = 0,
+): string {
   const d = o.animDuration;
   // bars animate for everyone (the spinning cube already ignores reduce-motion,
   // so this keeps them consistent). To respect the setting again, restore:
   // const common = `@media (prefers-reduced-motion:reduce){.bar{animation:none!important;opacity:1!important;transform:none!important}}`;
   const common = "";
+  if (o.animStyle === "wave")
+    return `.bar{transform-box:fill-box;animation:bob ${Math.max(2, d * 4).toFixed(2)}s ease-in-out infinite}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}${common}`;
+  if (o.animStyle === "none") return "";
+  if (o.animLoop === false) return onceStyle(o.animStyle, d, common);
+
+  // One cycle per bar: build in, hold while the rest of the wave catches up,
+  // tear down with the same motion reversed, then idle before looping.
+  // Every bar shares the cycle length and is offset by its animation-delay, so
+  // the build and teardown both read as one wave sweeping across the grid.
+  const hold = o.animHold ?? 1.1, gap = o.animGap ?? 0.45;
+  const outStart = span + d + hold;
+  const T = outStart + d + span + gap;
+  const at = (t: number) => (100 * t / T).toFixed(2) + "%";
+  const IN = "cubic-bezier(.34,1.56,.64,1)";   // overshoot on the way in
+  const OUT = "cubic-bezier(.5,-.3,.75,.4)";   // anticipate, then snap away
+  const ease = (fn: string) => `animation-timing-function:${fn}`;
+
+  // in: 0 -> d, hold: d -> outStart, out: outStart -> outStart+d, idle: -> T
+  // Opacity lands early on the way in and leaves late on the way out, so the
+  // scale/translate motion stays readable at both ends.
+  const kf = (name: string, from: string, to: string) =>
+    `@keyframes ${name}{` +
+    `0%{opacity:0;transform:${from};${ease(IN)}}` +
+    `${at(d * 0.6)}{opacity:1}` +
+    `${at(d)}{opacity:1;transform:${to};${ease("linear")}}` +
+    `${at(outStart)}{opacity:1;transform:${to};${ease(OUT)}}` +
+    `${at(outStart + d * 0.45)}{opacity:1}` +
+    `${at(outStart + d)}{opacity:0;transform:${from};${ease("linear")}}` +
+    `100%{opacity:0;transform:${from}}}`;
+
+  const bar = (name: string, origin = true) =>
+    `.bar{transform-box:fill-box;${origin ? "transform-origin:bottom center;" : ""}` +
+    `opacity:0;animation:${name} ${T.toFixed(2)}s linear infinite backwards}`;
+
   switch (o.animStyle) {
+    case "build":  return bar("place") + kf("place", "scale(0)", "scale(1)") + common;
+    case "bounce": return bar("pop") + kf("pop", "scaleY(0)", "scaleY(1)") + common;
+    case "drop":   return bar("fall", false) + kf("fall", "translateY(-46px)", "translateY(0)") + common;
+    case "sweep":  return bar("rise", false) + kf("rise", "translateY(16px)", "translateY(0)") + common;
+    default: return "";
+  }
+}
+
+// original play-once behaviour, kept for animLoop:false
+function onceStyle(style: AnimStyle, d: number, common: string): string {
+  switch (style) {
     case "build": return `.bar{transform-box:fill-box;transform-origin:bottom center;opacity:0;animation:place ${d}s cubic-bezier(.34,1.56,.64,1) forwards}@keyframes place{0%{opacity:0;transform:scale(0)}60%{opacity:1}100%{opacity:1;transform:scale(1)}}${common}`;
-    case "wave": return `.bar{transform-box:fill-box;animation:bob ${Math.max(2, d * 4).toFixed(2)}s ease-in-out infinite}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}${common}`;
     case "bounce": return `.bar{transform-box:fill-box;transform-origin:bottom center;opacity:0;animation:pop ${d}s cubic-bezier(.34,1.56,.64,1) forwards}@keyframes pop{0%{opacity:0;transform:scaleY(0)}55%{opacity:1}100%{opacity:1;transform:scaleY(1)}}${common}`;
     case "drop": return `.bar{opacity:0;animation:fall ${d}s cubic-bezier(.3,1.5,.5,1) forwards}@keyframes fall{0%{opacity:0;transform:translateY(-46px)}55%{opacity:1}100%{opacity:1;transform:translateY(0)}}${common}`;
     case "sweep": return `.bar{opacity:0;animation:rise ${d}s cubic-bezier(.2,.7,.3,1) forwards}@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}${common}`;
@@ -114,7 +174,7 @@ export function renderBars(grid: number[][], options: RenderOptions = {}) {
 export function renderContrib3D(grid: number[][], options: RenderOptions = {}): string {
   const o = { ...DEF, ...options };
   const { group, width, height } = renderBars(grid, options);
-  const style = o.animStyle !== "none" ? `<style>${styleBlock(o)}</style>` : "";
+  const style = o.animStyle !== "none" ? `<style>${styleBlock(o, staggerSpan(grid, o))}</style>` : "";
   const bg = o.background != null ? `<rect width="${width}" height="${height}" rx="${o.radius}" fill="${o.background}"/>` : "";
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${style}${bg}${group}</svg>`;
 }
@@ -247,7 +307,7 @@ export function renderProfileCard(grid: number[][], data: ProfileData, options: 
 
   const fadeCss = animated ? `.fade{opacity:0;animation:fadein .7s ease .2s forwards}@keyframes fadein{to{opacity:1}}` : "";
   const segCss = animated ? `.seg{transform-box:fill-box;transform-origin:left center;transform:scaleX(0);animation:grow .5s cubic-bezier(.3,.8,.3,1) forwards}@keyframes grow{to{transform:scaleX(1)}}` : "";
-  const style = `<style>${styleBlock(o)}${fadeCss}${segCss}</style>`;
+  const style = `<style>${styleBlock(o, staggerSpan(grid, o))}${fadeCss}${segCss}</style>`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">` +
     style +
