@@ -1,4 +1,6 @@
-![](./profile-3d-contrib/profile-night-view.svg)
+<p align="center">
+  <img src="./card.svg" width="100%" alt="Hansong — GitHub profile card" />
+</p>
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/HansongProgramming/HansongProgramming/trophy-output/trophy.svg" height="150" alt="trophy graph"  />
@@ -6,7 +8,7 @@
   <br clear="both">
 
   <h1>Hans' Stack</h1>
-  
+
 <div data-importer="techs" align="center">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="40" alt="javascript logo"  />
   <img width="12" />
