@@ -45,7 +45,10 @@ const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 // ---- bar animation CSS ----
 export function styleBlock(o: { animStyle: AnimStyle; animDuration: number }): string {
   const d = o.animDuration;
-  const common = `@media (prefers-reduced-motion:reduce){.bar{animation:none!important;opacity:1!important;transform:none!important}}`;
+  // bars animate for everyone (the spinning cube already ignores reduce-motion,
+  // so this keeps them consistent). To respect the setting again, restore:
+  // const common = `@media (prefers-reduced-motion:reduce){.bar{animation:none!important;opacity:1!important;transform:none!important}}`;
+  const common = "";
   switch (o.animStyle) {
     case "build": return `.bar{transform-box:fill-box;transform-origin:bottom center;opacity:0;animation:place ${d}s cubic-bezier(.34,1.56,.64,1) forwards}@keyframes place{0%{opacity:0;transform:scale(0)}60%{opacity:1}100%{opacity:1;transform:scale(1)}}${common}`;
     case "wave": return `.bar{transform-box:fill-box;animation:bob ${Math.max(2, d * 4).toFixed(2)}s ease-in-out infinite}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}${common}`;
