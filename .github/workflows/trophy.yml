@@ -26,7 +26,7 @@ jobs:
         with:
           username: ${{ github.repository_owner }}
           file: dist/trophy.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT_TROPHY }}
           theme: nord
           max-rows: 1
           margin-width: 8
